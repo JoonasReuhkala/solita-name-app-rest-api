@@ -1,0 +1,23 @@
+rest api
+back-end for solita-name-app/web-app/
+
+host at heroku? github vs, fork?
+
+node.js, express, mongoose (mongoDB)
+postman, mongoDB compass, npm, debug
+
+class employee {
+  name: String,
+  amount: Number,
+} as json
+
+// api/names -> [employee]
+// api/names?sortBy=name -> [employee]
+// api/names?sortBy=amount -> [employee]
+// api/names?totalAmount -> Number
+// api/names/:name -> Number
+
+- models
+- routes
+- public
+
