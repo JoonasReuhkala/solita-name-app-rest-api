@@ -1,0 +1,7 @@
+/window.addEventListener("beforeunload", function(event) { ... });
+
+    name
+    .replace(/[^a-z]+/gi, " ")
+    .split(" ")
+    .replace(" ", "")
+    [0];
