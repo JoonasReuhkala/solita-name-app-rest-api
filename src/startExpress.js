@@ -2,7 +2,7 @@ const Express = require('express');
 const Debug = require('debug');
 const Cors = require ('cors');
 
-const debugExpress = Debug('app:express') //cmd >set DEBUG=app.express || app:*
+const debugExpress = Debug('app:express') //cmd> set DEBUG=app:express || app:*
 const employeeRouter = require ('./router/employeeRouter.js');
 
 function startExpress(config) {

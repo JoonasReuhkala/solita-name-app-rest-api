@@ -14,6 +14,10 @@ const employeeSchema = new Mongoose.Schema(
       min: 0,
       max: 99,
     },
+    userKey: {
+      type: Number, 
+      //required : true,
+    },
   }
 );
 
