@@ -8,14 +8,17 @@ const database = require('../databaseInteractor.js')
 //api/employee/byAmount -> get sorted array of employees
 //api/employee//totalAmountOf -> get number of total employees
 
-const expressDebug = Debug("app:router:express");
+const routerDebug = Debug("app:router:express");
 
 const expressRouter = Router();
 
 expressRouter.get('/seed', async (request, response) => {
+  const userKey = request.query.userKey;
+  routerDebug("Seeding, userKey: " + userKey);
 
-  await database.seedDatabase(request.query.userKey);
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  await database.seedDatabaseWithKey(userKey);
+
+  const employeeAll = await database.getEmployeeAll(userKey);
 
   response.send({
     names: employeeAll.sort(byName), 
@@ -24,8 +27,10 @@ expressRouter.get('/seed', async (request, response) => {
 });
 
 expressRouter.get('/', async (request, response) => {
+  const userKey = request.query.userKey;
+  routerDebug("Get all, sort by name, userKey: " + userKey);
 
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const employeeAll = await database.getEmployeeAll(userKey);
 
   response.send({
     names: employeeAll.sort(byName), 
@@ -34,7 +39,10 @@ expressRouter.get('/', async (request, response) => {
 });
 
 expressRouter.get('/byAmount', async (request, response) => {
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const userKey = request.query.userKey;
+  routerDebug("Get all, sort by amount, userKey: " + userKey);
+
+  const employeeAll = await database.getEmployeeAll(userKey);
 
   response.send({
     names: employeeAll.sort(byAmount), 
@@ -43,15 +51,18 @@ expressRouter.get('/byAmount', async (request, response) => {
 });
 
 expressRouter.get('/totalAmountOf', async (request, response) => {
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const userKey = request.query.userKey;
+  routerDebug("Get total amount, userKey: " + userKey);
+  const employeeAll = await database.getEmployeeAll(userKey);
   response.send({
     totalAmountOf: totalAmountOf(employeeAll)
   });
 });
 
 expressRouter.get('/:name', async (request, response) => {
-
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const userKey = request.query.userKey;
+  routerDebug("Get with name, userKey: " + userKey);
+  const employeeAll = await database.getEmployeeAll(userKey);
 
   const employee = employeeAll.find( employee => 
     employee.name.toLowerCase() == request.params.name.toLowerCase() 
@@ -61,9 +72,10 @@ expressRouter.get('/:name', async (request, response) => {
 });
 
 expressRouter.post('/', async (request, response) => {
-  expressDebug("post:" + request.query.userKey);
-  await database.saveEmployee(request.query.userKey);
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const userKey = request.query.userKey;
+  routerDebug("Post, userKey: " + userKey);
+  await database.saveEmployee(userKey);
+  const employeeAll = await database.getEmployeeAll(userKey);
   response.send({
     names: employeeAll.sort(byName), 
     totalAmountOf: totalAmountOf(employeeAll)
@@ -71,9 +83,10 @@ expressRouter.post('/', async (request, response) => {
 });
 
 expressRouter.delete('/', async (request, response) => {
-  expressDebug(request.body.userKey);
-  await database.removeEmployee(request.body.userKey);
-  const employeeAll = await database.getEmployeeAll(request.query.userKey);
+  const userKey = request.query.userKey;
+  routerDebug("Delete, userKey: " + userKey);
+  await database.removeEmployee(userKey);
+  const employeeAll = await database.getEmployeeAll(userKey);
   response.send({
     names: employeeAll.sort(byName), 
     totalAmountOf: totalAmountOf(employeeAll)

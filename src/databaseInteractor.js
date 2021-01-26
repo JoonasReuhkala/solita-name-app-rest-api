@@ -15,44 +15,32 @@ Mongoose.connect(
   addressOfDb, { useNewUrlParser: true, useUnifiedTopology: true }) //to get rid of warnigs
   .then(()=> {
     debugMongoose('Connected to MongoDb');
-    seed(1000);
   })
   .catch( error => {
     debugMongoose('Mongoose connection error');
-    throw Error()
   });
 
-  seed = async (key) => {
-    debugMongoose('Seeding database, key:', key);
-    employeeCache.names.forEach ( async employee => {
-        const seed = new EmployeeData ({
-          name: employee.name,
-          amount: employee.amount,
-          userKey: 1000, //just to make this work again :(
-        });
-        await seed.save();
-      });
-  },
 
 module.exports = {
 
-  seedDatabase : async (key) => {
+  seedDatabaseWithKey: (key) => {
+  
     debugMongoose('Seeding database, key:', key);
     
-    employeeCache.names.forEach ( async employee => {
-
-      const seed = new EmployeeData ({
+    employeeCache.names.forEach ( employee => {
+  
+      const seedDatabase = new EmployeeData ({
         name: employee.name,
         amount: employee.amount,
-        userKey: 1001, //just to make this work again :(
+        userKey: key,
       });
       
-      await seed.save();
+      seedDatabase.save();
     });
   },
 
   getEmployeeAll: async (key) => 
-    await EmployeeData.find({userKey: 1001})
+    await EmployeeData.find({userKey: key})
     .then (response => {
       debugMongoose( 'getEmployeeAll: Success.');
       return response;
@@ -63,18 +51,18 @@ module.exports = {
     }),
 
   saveEmployee: async (key) => {
-    const seed = new EmployeeData ({
+    const seedDatabase = new EmployeeData ({
       name: "Joonas",
       amount: 1,
-      userKey: 1001,
+      userKey: key,
     });
-    await seed.save();
+    await seedDatabase.save();
   },
 
   removeEmployee: async (key) =>
     await EmployeeData.findOneAndRemove( {
       name : "Joonas",
-      userKey: 1001,
+      userKey: key,
     })    
     .then (response => {
       debugMongoose( 'removeEmployy: Success.');
